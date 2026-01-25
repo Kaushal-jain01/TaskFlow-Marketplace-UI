@@ -75,6 +75,7 @@ function AppContent() {
           <Route path="claimed" element={<ClaimedTasks />} />
           <Route path="completed" element={<CompletedTasks />} />
           <Route path="history" element={<TaskHistory />} />
+          <Route path="tasks/:id" element={<TaskDetail />} />
         </Route>
 
         <Route
@@ -85,14 +86,14 @@ function AppContent() {
             </ProtectedRoute>
           }
         />
-       <Route
+       {/* <Route
         path="/tasks/detail/:id"
         element={
           <ProtectedRoute>
             <TaskDetail />
           </ProtectedRoute>
         }
-      />
+      /> */}
 
 
         {/* Default route */}

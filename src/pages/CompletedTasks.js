@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import API_BASE from '../config/api';
 
 export default function CompletedTasks() {
+  const { user } = useAuth();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -96,14 +98,23 @@ export default function CompletedTasks() {
   // =========================
   return (
     <div className="p-3">
-      <h4>Completed Tasks</h4>
+      {user.role === 'worker' ? (
+        <h4>Completed Tasks</h4>
+      ) : (
+        <h4>Pending Approval / Payment</h4>
+      )}
+      <hr />
 
       {loading ? (
         <div className="d-flex justify-content-center mt-5">
           <div className="spinner-border" role="status" />
         </div>
       ) : tasks.length === 0 ? (
-        <p>No Completed tasks yet.</p>
+        user.role === 'worker' ? (
+          <p>No completed tasks yet.</p>
+        ) : (
+          <p>No tasks pending approval or payment.</p>
+        )
       ) : (
         tasks.map(task => (
           <div key={task.id} className="card mb-3">

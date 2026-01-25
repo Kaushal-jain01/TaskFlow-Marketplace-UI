@@ -4,6 +4,8 @@ import {
   ClipboardList,
   CheckCircle,
   History,
+  Hand,
+  Clock,
   LogOut,
   User
 } from 'lucide-react';
@@ -23,7 +25,9 @@ export default function DashboardLayout() {
 
   const businessLinks = [
     { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { label: 'Posted Tasks', path: '/dashboard/posted', icon: ClipboardList },
+    { label: 'Open Tasks', path: '/dashboard/posted', icon: ClipboardList },
+    { label: 'Claimed Tasks', path: '/dashboard/claimed', icon: Hand },
+    { label: 'Pending', path: '/dashboard/completed', icon: Clock },
     { label: 'History', path: '/dashboard/history', icon: History },
   ];
 

@@ -140,7 +140,9 @@ export default function Dashboard() {
         <div className="col-8 p-3 overflow-auto" style={{ maxHeight: '100vh' }}>
           {user?.role === 'worker' ? (
             <>
-              <h4>Open Tasks</h4>
+            <h4>Open Tasks</h4>
+            <hr/>
+
               {loading ? (
                 <div className="d-flex justify-content-center mt-5">
                   <div className="spinner-border" role="status" />
@@ -170,31 +172,22 @@ export default function Dashboard() {
                   <PlusCircle className="me-2" /> Create Task
                 </button>
               </div>
+              <hr />
 
               {/* Recently Posted Tasks */}
-              <h5>Recently Posted Tasks</h5>
-              {(stats.recent_tasks || []).length > 0 ? (
-                (stats.recent_tasks || []).map(task => (
-                  <div key={task.id} className="card mb-2">
-                    <div className="card-body d-flex justify-content-between align-items-center">
-                      <div>
-                        <h6>{task.title}</h6>
-                        <small className="text-muted">{task.status} | ₹{task.price}</small>
-                      </div>
-                      <div>
-                        <button className="btn btn-sm btn-primary me-1" onClick={() => handleEditTask(task.id)}>Edit</button>
-                        <button className="btn btn-sm btn-warning" onClick={() => handleRemindWorker(task.id)}>Remind</button>
-                      </div>
-                    </div>
-                  </div>
-                ))
+              {/* <h5>Recently Posted Tasks</h5>
+              {stats.open > 0 ? (
+                <p>
+                  Recently Posted Tasks Found: <strong>{stats.open}</strong>
+                </p>
               ) : (
-                <p>No recent tasks.</p>
-              )}
+                <p className="text-muted">No recent tasks.</p>
+              )} */}
 
               {/* Task Status Chart */}
               <div className="mt-4">
                 <h5>Task Status Overview</h5>
+                
                 {chartData.datasets && chartData.datasets.length > 0 ? (
                   <Bar
                     data={chartData}

@@ -28,6 +28,7 @@ export default function ClaimedTasks({ userId }) {
   return (
     <div className="p-3">
       <h4>Previous Tasks</h4>
+      <hr />
       {loading ? (
         <div className="d-flex justify-content-center mt-5">
           <div className="spinner-border" role="status" />
@@ -38,7 +39,21 @@ export default function ClaimedTasks({ userId }) {
         tasks.map(task => (
           <div key={task.id} className="card mb-3">
             <div className="card-body">
-              <h5 className="card-title">{task.title}</h5>
+        
+              <div className="d-flex justify-content-between align-items-start">
+              <h5 className="card-title mb-0">{task.title}</h5>
+              <span 
+                className={`badge rounded-pill px-3 py-2 fs-6 fst-italic ${
+                  task.status === 'completed' ? 'bg-success' :
+                  task.status === 'pending' ? 'bg-warning text-dark' :
+                  task.status === 'paid' ? 'bg-success' :
+                  'bg-secondary'
+                }`}
+              >
+                {task.status.toUpperCase()}
+              </span>
+            </div>
+
               <p className="card-text">{task.description}</p>
               <p className="card-text">
                 <small className="text-muted">
@@ -47,7 +62,7 @@ export default function ClaimedTasks({ userId }) {
               </p>
               <button
                 className="btn btn-primary btn-sm mt-2"
-                onClick={() => navigate(`/tasks/detail/${task.id}`)}
+                onClick={() => navigate(`../tasks/${task.id}`)}
               >
                 View Details
               </button>

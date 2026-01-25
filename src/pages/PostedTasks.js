@@ -63,7 +63,8 @@ export default function PostedTasks() {
   // --------------------------
   return (
     <div className="p-3">
-      <h4>Posted Tasks</h4>
+      <h4>Open Tasks</h4>
+      <hr />
 
       {loading ? (
         <div className="d-flex justify-content-center mt-5">
@@ -84,7 +85,7 @@ export default function PostedTasks() {
               </p>
               <button
                 className="btn btn-primary btn-sm mt-2"
-                onClick={() => navigate(`/tasks/detail/${task.id}`)}
+                onClick={() => navigate(`../tasks/${task.id}`)}
               >
                 View Details
               </button>

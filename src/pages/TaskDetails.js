@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import API_BASE from '../config/api';
@@ -7,15 +7,15 @@ import { Elements } from "@stripe/react-stripe-js";
 import { stripePromise } from "../stripe";
 import StripePayment from "../components/StripePayment";
 
-
-
 export default function TaskDetail() {
-  const { id } = useParams(); // task id from URL
-  const [task, setTask] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { id } = useParams();
+  const navigate = useNavigate();
   const { user } = useAuth();
 
-  // Completion states (worker)
+  const [task, setTask] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Worker completion
   const [completionDetails, setCompletionDetails] = useState('');
   const [proofImage, setProofImage] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -26,14 +26,13 @@ export default function TaskDetail() {
 
   // Payments
   const [clientSecret, setClientSecret] = useState(null);
-  const [showPayment, setShowPayment] = useState(false);
   const [billingDetails, setBillingDetails] = useState(null);
+  const [showPayment, setShowPayment] = useState(false);
 
   const fetchTask = async () => {
     try {
       const res = await axios.get(`${API_BASE}/tasks/${id}/`);
       setTask(res.data);
-      console.log("User: ",user)
     } catch (err) {
       console.error('Failed to load task', err);
     } finally {
@@ -45,7 +44,7 @@ export default function TaskDetail() {
     try {
       const res = await axios.get(`${API_BASE}/tasks/${id}/comments/`);
       setComments(res.data);
-    } catch (err) {
+    } catch {
       console.error('Failed to load comments');
     }
   };
@@ -53,117 +52,103 @@ export default function TaskDetail() {
   useEffect(() => {
     fetchTask();
     fetchComments();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, [id]);
 
-  // -------------------------
-  // Worker: Complete Task
-  // -------------------------
+  const getStatusBadge = (status) => {
+    const map = {
+      open: 'secondary',
+      claimed: 'info',
+      completed: 'warning',
+      approved: 'primary',
+      paid: 'success',
+    };
+
+    return (
+      <span className={`badge bg-${map[status] || 'secondary'}`}>
+        {status.toUpperCase()}
+      </span>
+    );
+  };
+
+  // ---------------- Worker: Complete Task ----------------
   const handleCompleteTask = async () => {
-    if (!proofImage || !completionDetails.trim()) {
-      alert('Please provide proof image and completion details');
+    if (!completionDetails.trim() || !proofImage) {
+      alert('Please add completion details and proof image');
       return;
     }
 
     const formData = new FormData();
-    formData.append('proof_image', proofImage);
     formData.append('completion_details', completionDetails);
+    formData.append('proof_image', proofImage);
 
     try {
       setSubmitting(true);
-      await axios.patch(
-        `${API_BASE}/tasks/${id}/complete/`,
-        formData,
-        { headers: { 'Content-Type': 'multipart/form-data' } }
-      );
+      await axios.patch(`${API_BASE}/tasks/${id}/complete/`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
 
-      alert('✅ Task completed successfully');
+      alert('✅ Task completed');
       setCompletionDetails('');
       setProofImage(null);
       fetchTask();
       fetchComments();
-    } catch (err) {
+    } catch {
       alert('❌ Failed to complete task');
     } finally {
       setSubmitting(false);
     }
   };
 
-  // -------------------------
-  // Business: Approve Task
-  // -------------------------
+  // ---------------- Business: Approve ----------------
   const handleApproveTask = async () => {
     try {
       await axios.patch(`${API_BASE}/tasks/${id}/approve/`);
       alert('✅ Task approved');
       fetchTask();
-    } catch (err) {
-      alert('❌ Failed to approve task');
+    } catch {
+      alert('❌ Approval failed');
     }
   };
 
-  // -------------------------
-  // Business: Pay for a Task
-  // -------------------------
+  // ---------------- Business: Pay ----------------
   const handlePayTask = async () => {
-    // try {
-    //     await axios.patch(`${API_BASE}/tasks/${id}/pay/`);
-    //     alert('✅ Task marked as paid');
-    //     fetchTask(); // refresh task details
-    // } catch (err) {
-    //     alert('❌ Failed to pay task');
-    // }
-
     try {
-      const token = localStorage.getItem("token");
-
+      const token = localStorage.getItem('token');
       const res = await axios.patch(
         `${API_BASE}/tasks/${id}/pay/`,
         {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      console.log(res)
-
       setClientSecret(res.data.client_secret);
-      setBillingDetails(res.data.billing_details)
+      setBillingDetails(res.data.billing_details);
       setShowPayment(true);
-    //   fetchTask(); // refresh task details
-    } catch (err) {
-      console.error(err.response?.data || err.message);
-      alert("Failed to initiate payment");
+    } catch {
+      alert('❌ Failed to initiate payment');
     }
-    };
+  };
 
-
-  // -------------------------
-  // Add Comment
-  // -------------------------
+  // ---------------- Comments ----------------
   const handleAddComment = async () => {
     if (!newComment.trim()) return;
 
     try {
       await axios.post(`${API_BASE}/tasks/${id}/comments/`, {
-        message: newComment
+        message: newComment,
       });
       setNewComment('');
       fetchComments();
-    } catch (err) {
+    } catch {
       alert('Failed to add comment');
     }
   };
 
-  // -------------------------
-  // UI
-  // -------------------------
+  // ---------------- UI ----------------
   if (loading) {
     return (
       <div className="d-flex justify-content-center vh-100 align-items-center">
-        <div className="spinner-border" role="status" />
+        <div className="spinner-border" />
       </div>
     );
   }
@@ -171,106 +156,126 @@ export default function TaskDetail() {
   if (!task) return <p>Task not found.</p>;
 
   return (
-    <div className="p-3">
-      <h3>{task.title}</h3>
-      <p>{task.description}</p>
-      <p>
-        <small className="text-muted">
-          Price: ₹{task.price} | Duration: {task.duration_minutes} mins
-        </small>
-      </p>
-      <p>Status: <strong>{task.status}</strong></p>
-      <p>Created by: {task.created_by?.username}</p>
-      {task.claimed_by && <p>Claimed by: {task.claimed_by.username}</p>}
+    <div className="container-fluid p-3">
 
-      {/* Proof + completion (if completed) */}
-      {task.status === 'completed' && task.completion && (
-        <div className="mt-3 border p-2">
-          <h5>Completion Details:</h5>
-          <p>{task.completion.completion_details}</p>
-          {task.completion.proof_image && (
-           <img
-            src={`${API_BASE.replace(/\/api\/$/, '')}${task.completion.proof_image}`}
-            alt="Proof"
-            className="img-fluid"
-          />
-          )}
-        </div>
-      )}
+      {/* Back */}
+      <button className="btn btn-link mb-2" onClick={() => navigate(-1)}>
+        ← Back
+      </button>
 
-      {/* Worker: Complete Task Form */}
-      {task.status === 'claimed' && !task.completion && (
-        <div className="mt-3 border p-2">
-          <h5>Complete Task</h5>
-          <div className="mb-2">
-            <label className="form-label">Completion Details</label>
-            <textarea
-              className="form-control"
-              rows="3"
-              value={completionDetails}
-              onChange={(e) => setCompletionDetails(e.target.value)}
-            />
-          </div>
-          <div className="mb-2">
-            <label className="form-label">Proof Image</label>
-            <input
-              type="file"
-              className="form-control"
-              onChange={(e) => setProofImage(e.target.files[0])}
-            />
-          </div>
-          <button
-            className="btn btn-success"
-            disabled={submitting}
-            onClick={handleCompleteTask}
-          >
-            {submitting ? 'Submitting...' : 'Submit Completion'}
-          </button>
-        </div>
-      )}
-
-      {/* Business: Approve Task */}
-      {task.status === 'completed' && task.created_by?.id === user.id && (
-        <div className="mt-3">
-          <button className="btn btn-primary" onClick={handleApproveTask}>
-            Approve Task
-          </button>
-        </div>
-      )}
-
-      {/* Business: Pay Task */}
-    {task.status === 'approved' && task.created_by?.id === user.id && (
-    <div className="mt-3">
-        <button className="btn btn-success" onClick={handlePayTask}>
-        Pay Task
-        </button>
-    </div>
-    )}
-
-      {/* Comments */}
-      <div className="mt-4">
-        <h5>Comments</h5>
-        {comments.map(c => (
-          <div key={c.id} className="border rounded p-2 mb-1">
-            <small className="fw-bold">{c.user.username}</small>
-            <div>{c.message}</div>
-          </div>
-        ))}
-
-        <div className="d-flex mt-2">
-          <input
-            className="form-control me-2"
-            placeholder="Add a comment..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-          />
-          <button className="btn btn-secondary" onClick={handleAddComment}>
-            Send
-          </button>
+      {/* Header */}
+      <div className="mb-3">
+        <h4 className="fw-bold">{task.title}</h4>
+        <div className="d-flex gap-2 align-items-center">
+          {getStatusBadge(task.status)}
+          <small className="text-muted">
+            Created by {task.created_by?.username}
+          </small>
         </div>
       </div>
 
-      {/* 🔹 Stripe Modal (SINGLE INSTANCE) */}
+      {/* Task Info */}
+      <div className="card mb-3">
+        <div className="card-body">
+          <p>{task.description}</p>
+          <div className="d-flex gap-4 text-muted">
+            <span>💰 ₹{task.price}</span>
+            <span>⏱ {task.duration_minutes} mins</span>
+            {task.claimed_by && (
+              <span>👤 Claimed by {task.claimed_by.username}</span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Completion Details */}
+      {task.status === 'completed' && task.completion && (
+        <div className="card mb-3">
+          <div className="card-body">
+            <h6 className="fw-bold">Completion Details</h6>
+            <p>{task.completion.completion_details}</p>
+            {task.completion.proof_image && (
+              <img
+                src={`${API_BASE.replace(/\/api\/$/, '')}${task.completion.proof_image}`}
+                alt="Proof"
+                className="img-fluid rounded border"
+              />
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Worker Completion Form */}
+      {task.status === 'claimed' && !task.completion && (
+        <div className="card mb-3">
+          <div className="card-body">
+            <h6 className="fw-bold">Complete Task</h6>
+
+            <textarea
+              className="form-control mb-2"
+              rows="3"
+              placeholder="Describe your work..."
+              value={completionDetails}
+              onChange={(e) => setCompletionDetails(e.target.value)}
+            />
+
+            <input
+              type="file"
+              className="form-control mb-2"
+              onChange={(e) => setProofImage(e.target.files[0])}
+            />
+
+            <button
+              className="btn btn-success"
+              disabled={submitting}
+              onClick={handleCompleteTask}
+            >
+              {submitting ? 'Submitting...' : 'Submit Completion'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Business Actions */}
+      {task.status === 'completed' && task.created_by?.id === user.id && (
+        <button className="btn btn-primary me-2" onClick={handleApproveTask}>
+          Approve Task
+        </button>
+      )}
+
+      {task.status === 'approved' && task.created_by?.id === user.id && (
+        <button className="btn btn-success" onClick={handlePayTask}>
+          Pay Task
+        </button>
+      )}
+
+      {/* Comments */}
+      <div className="card mt-4">
+        <div className="card-body">
+          <h6 className="fw-bold mb-3">Comments</h6>
+
+          {comments.map(c => (
+            <div key={c.id} className="border rounded p-2 mb-2">
+              <small className="fw-bold">{c.user.username}</small>
+              <div>{c.message}</div>
+            </div>
+          ))}
+
+          <div className="d-flex mt-2">
+            <input
+              className="form-control me-2"
+              placeholder="Add a comment..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+            />
+            <button className="btn btn-secondary" onClick={handleAddComment}>
+              Send
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Stripe Modal */}
       {showPayment && clientSecret && (
         <div className="modal show d-block bg-dark bg-opacity-50">
           <div className="modal-dialog">

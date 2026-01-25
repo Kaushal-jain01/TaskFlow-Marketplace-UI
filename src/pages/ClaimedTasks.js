@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import API_BASE from '../config/api';
 
 export default function ClaimedTasks() {
+  const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   // Completion states
   const [activeTaskId, setActiveTaskId] = useState(null);
@@ -97,6 +101,7 @@ export default function ClaimedTasks() {
   return (
     <div className="p-3">
       <h4>Claimed Tasks</h4>
+      <hr />
 
       {loading ? (
         <div className="d-flex justify-content-center mt-5">
@@ -119,12 +124,14 @@ export default function ClaimedTasks() {
               </p>
 
               {/* COMPLETE BUTTON */}
-              <button
+              {task.claimed_by?.id === user.id && 
+              (<button
                 className="btn btn-sm btn-success"
                 onClick={() => setActiveTaskId(task.id)}
               >
                 Complete Task
-              </button>
+              </button>)
+              }
 
               {/* COMPLETE FORM */}
               {activeTaskId === task.id && (
@@ -161,42 +168,11 @@ export default function ClaimedTasks() {
               {/* COMMENTS */}
               <div className="mt-3">
                 <button
-                  className="btn btn-link p-0"
-                  onClick={() => fetchComments(task.id)}
-                >
-                  View Comments
-                </button>
-
-                {comments[task.id] && (
-                  <div className="mt-2">
-                    {comments[task.id].map(c => (
-                      <div
-                        key={c.id}
-                        className="border rounded p-2 mb-1"
-                      >
-                        <small className="fw-bold">
-                          {c.user.username}
-                        </small>
-                        <div>{c.message}</div>
-                      </div>
-                    ))}
-
-                    <div className="d-flex mt-2">
-                      <input
-                        className="form-control me-2"
-                        placeholder="Add a comment..."
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                      />
-                      <button
-                        className="btn btn-sm btn-secondary"
-                        onClick={() => handleAddComment(task.id)}
-                      >
-                        Send
-                      </button>
-                    </div>
-                  </div>
-                )}
+                className="btn btn-primary btn-sm mt-2"
+                onClick={() => navigate(`../tasks/${task.id}`)}
+              >
+                View Details
+              </button>
               </div>
 
             </div>
