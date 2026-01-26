@@ -100,6 +100,24 @@ export default function TaskDetail() {
     }
   };
 
+  // ---------------- Delete Task (Business Only) ----------------
+  const handleDeleteTask = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this task? This action cannot be undone."
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await axios.delete(`${API_BASE}/tasks/${id}/`);
+      alert("🗑 Task deleted successfully");
+      navigate(-1); // go back to dashboard
+    } catch (err) {
+      alert("❌ Failed to delete task");
+    }
+  };
+
+
   // ---------------- Business: Approve ----------------
   const handleApproveTask = async () => {
     try {
@@ -164,15 +182,28 @@ export default function TaskDetail() {
       </button>
 
       {/* Header */}
-      <div className="mb-3">
-        <h4 className="fw-bold">{task.title}</h4>
+      <div className="mb-3 d-flex justify-content-between align-items-center">
+        {/* Left side: status + creator */}
         <div className="d-flex gap-2 align-items-center">
           {getStatusBadge(task.status)}
           <small className="text-muted">
             Created by {task.created_by?.username}
           </small>
         </div>
+
+        {/* Right side: Delete button */}
+        {task.created_by?.id === user.id && task.status === 'open' && (
+          <button
+            className="btn btn-outline-danger btn-sm"
+            onClick={handleDeleteTask}
+          >
+            🗑 Delete
+          </button>
+        )}
       </div>
+
+      {/* Task title below header */}
+      <h4 className="fw-bold">{task.title}</h4>
 
       {/* Task Info */}
       <div className="card mb-3">
