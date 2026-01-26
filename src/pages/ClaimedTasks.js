@@ -112,26 +112,32 @@ export default function ClaimedTasks() {
       ) : (
         tasks.map(task => (
           <div key={task.id} className="card mb-3">
-            <div className="card-body">
-              <h5 className="card-title">{task.title}</h5>
+            {/* Card Body */}
+<div className="card-body">
+  <div className="d-flex justify-content-between align-items-start mb-2">
+    {/* Left: Task Title */}
+    <h5 className="card-title">{task.title}</h5>
 
-              <p className="card-text">{task.description}</p>
+    {/* Right: Complete Button
+    {task.claimed_by?.id === user.id && (
+      <button
+        className="btn btn-sm btn-success"
+        onClick={() => setActiveTaskId(task.id)}
+      >
+        Complete Task
+      </button>
+    )} */}
+  </div>
 
-              <p className="card-text">
-                <small className="text-muted">
-                  Price: ₹{task.price} | Duration: {task.duration_minutes} mins
-                </small>
-              </p>
+  {/* Description */}
+  <p className="card-text">{task.description}</p>
 
-              {/* COMPLETE BUTTON */}
-              {task.claimed_by?.id === user.id && 
-              (<button
-                className="btn btn-sm btn-success"
-                onClick={() => setActiveTaskId(task.id)}
-              >
-                Complete Task
-              </button>)
-              }
+  {/* Price & Duration */}
+  <p className="card-text">
+    <small className="text-muted">
+      Price: ₹{task.price} | Duration: {task.duration_minutes} mins
+    </small>
+  </p>
 
               {/* COMPLETE FORM */}
               {activeTaskId === task.id && (
