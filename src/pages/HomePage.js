@@ -1,7 +1,22 @@
 import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from "axios";
+import API_BASE from "../config/api";
+import { useEffect } from "react";
 
 export default function HomePage() {
+
+  useEffect(() => {
+    // Wake up backend
+    axios.get(`${API_BASE}/health/`)
+      .then(() => {
+        console.log("Backend awake");
+      })
+      .catch(() => {
+        console.log("Backend wake-up failed");
+      });
+  }, []);
+
   return (
     <>
       {/* Navbar */}
