@@ -75,11 +75,11 @@ export default function HomePage() {
             <div className="col-md-4">
               <div className="card h-100 shadow-sm border-0">
                 <div className="card-body">
-                  <h3 className="card-title">🔔 Real-time Updates</h3>
-                  <p className="card-text text-muted">
-                    Get instant notifications for task claims, completions,
-                    and payments.
-                  </p>
+                  <h3 className="card-title">💬 Task Discussions</h3>
+                    <p className="card-text text-muted">
+                    Workers and businesses can communicate directly
+                    through task-based comments.
+                    </p>
                 </div>
               </div>
             </div>
