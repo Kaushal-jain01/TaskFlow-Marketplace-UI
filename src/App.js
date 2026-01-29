@@ -11,6 +11,7 @@ import TaskHistory from './pages/TaskHistory';
 import CreateTask from './pages/CreateTask';
 import CompletedTasks from './pages/CompletedTasks';
 import TaskDetail from './pages/TaskDetails';
+import HomePage from './pages/HomePage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Spinner while loading auth state
@@ -43,6 +44,14 @@ function AppContent() {
     <Router>
       <Routes>
         {/* Public routes */}
+        <Route 
+          path="/home" 
+          element={
+            <PublicRoute>
+              <HomePage />
+            </PublicRoute>
+          } 
+        />
         <Route 
           path="/login" 
           element={
@@ -97,7 +106,7 @@ function AppContent() {
 
 
         {/* Default route */}
-        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/" element={<Navigate to="/home" />} />
         <Route path="*" element={<Navigate to="/" />} /> {/* catch-all */}
       </Routes>
     </Router>
