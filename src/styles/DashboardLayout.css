@@ -1,14 +1,15 @@
+/* Dashboard Layout Dark Theme */
 .dashboard-layout {
   display: flex;
   height: 100vh;
-  background: #f8fafc;
+  background: #020617; /* Dark background */
 }
 
 /* Sidebar */
 .sidebar {
   width: 240px;
-  background: #ffffff;
-  border-right: 1px solid #e5e7eb;
+  background: #101528; /* Dark sidebar */
+  border-right: 2px solid #1d2a3b;
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
@@ -18,12 +19,7 @@
   font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 2rem;
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  color: #f8fafc;
 }
 
 .sidebar-link {
@@ -33,41 +29,26 @@
   padding: 0.6rem 0.75rem;
   border-radius: 8px;
   text-decoration: none;
-  color: #374151;
+  color: #f8fafc;
   font-size: 0.95rem;
   transition: background 0.2s, color 0.2s;
 }
 
 .sidebar-link:hover {
-  background: #f1f5f9;
+  background: #1e293b;
 }
 
 .sidebar-link.active {
-  background: #eef2ff;
-  color: #4338ca;
+  background: #4338ca;
+  color: #f8fafc;
   font-weight: 500;
-}
-
-/* Main content */
-.dashboard-main {
-  flex: 1;
-  padding: 1.75rem;
-  overflow-y: auto;
-}
-
-
-/* Main wrapper */
-.main-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
 }
 
 /* Top Navbar */
 .topbar {
   height: 64px;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  background: #101528; /* Dark topbar */
+  border-bottom: 2px solid #1d2a3b;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -80,9 +61,10 @@
 .page-title {
   font-size: 1.25rem;
   font-weight: 600;
+  color: #f8fafc;
 }
 
-/* Profile */
+/* Profile Section */
 .profile-section {
   display: flex;
   align-items: center;
@@ -92,26 +74,27 @@
 .profile {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  background: #f1f5f9;
-  padding: 0.4rem 0.6rem;
-  border-radius: 999px;
+  gap: 0.75rem;
+  background: #1e293b; /* Darker pill */
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
 }
 
 .profile-info {
   display: flex;
   flex-direction: column;
-  line-height: 1.1;
+  line-height: 1.2;
 }
 
 .profile-info .name {
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #f8fafc; /* White-ish text */
 }
 
 .profile-info .role {
-  font-size: 0.7rem;
-  color: #64748b;
+  font-size: 0.75rem;
+  color: #94a3b8; /* Muted gray */
   text-transform: capitalize;
 }
 
@@ -122,7 +105,7 @@
   gap: 0.4rem;
   background: none;
   border: none;
-  color: #dc2626;
+  color: #f87171; /* Red-ish for logout */
   font-size: 0.85rem;
   cursor: pointer;
 }

@@ -66,9 +66,11 @@ export default function Dashboard() {
 
   const handleClaim = async (taskId) => {
     try {
-      await axios.patch(`${API_BASE}/tasks/${taskId}/claim/`, {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-      });
+      await axios.patch(
+        `${API_BASE}/tasks/${taskId}/claim/`,
+        {},
+        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+      );
       alert('Task claimed successfully!');
       fetchOpenTasks();
       fetchWorkerStats();
@@ -82,85 +84,75 @@ export default function Dashboard() {
   // Business Functions
   // --------------------
   const fetchBusinessStats = async () => {
-  try {
-    const res = await axios.get(`${API_BASE}/dashboard/business/`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-    });
+    try {
+      const res = await axios.get(`${API_BASE}/dashboard/business/`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
 
-    const data = res.data || {};
-    setStats(data);
+      const data = res.data || {};
+      setStats(data);
 
-    console.log(data)
+      const openCount = data.open || 0;
+      const claimedCount = data.claimed || 0;
+      const completedCount = data.paid || 0;
 
-    // Compute chart data from recent_tasks if available
-    const openCount = data.open;
-    const claimedCount = data.claimed;
-    const postedCount = data.posted;
-    const completedCount = data.paid;
-    
-    console.log(postedCount)
-
-    setChartData({
-      labels: ['Open', 'Claimed', 'Completed'],
-      datasets: [
-        {
-          label: 'Tasks',
-          data: [openCount, claimedCount, completedCount],
-          backgroundColor: ['#0d6efd', '#ffc107', '#198754'],
-          borderRadius: 6,           // Rounded bars
-          barPercentage: 0.6,        // Thinner bars
-          categoryPercentage: 0.5,
-        },
-      ],
-    });
-
-  } catch (err) {
-    console.error('Error fetching business stats:', err);
-  }
-};
-
-  const handleCreateTask = () => {
-    navigate('/tasks/create');
+      setChartData({
+        labels: ['Open', 'Claimed', 'Completed'],
+        datasets: [
+          {
+            label: 'Tasks',
+            data: [openCount, claimedCount, completedCount],
+            backgroundColor: ['#0d6efd', '#ffc107', '#198754'],
+            borderRadius: 6,
+            barPercentage: 0.6,
+            categoryPercentage: 0.5,
+          },
+        ],
+      });
+    } catch (err) {
+      console.error('Error fetching business stats:', err);
+    }
   };
 
-  const handleEditTask = (taskId) => {
-    navigate(`/tasks/edit/${taskId}`);
-  };
-
-  const handleRemindWorker = (taskId) => {
-    alert(`Reminder sent for task ${taskId}`);
-  };
+  const handleCreateTask = () => navigate('/tasks/create');
+  const handleEditTask = (taskId) => navigate(`/tasks/edit/${taskId}`);
+  const handleRemindWorker = (taskId) => alert(`Reminder sent for task ${taskId}`);
 
   return (
-    <div className="container-fluid vh-100">
+    <div className="container-fluid vh-100" style={{ backgroundColor: '#020617', color: '#f8fafc' }}>
       <div className="row h-100">
-
         {/* Main Panel */}
         <div className="col-8 p-3 overflow-auto" style={{ maxHeight: '100vh' }}>
           {user?.role === 'worker' ? (
             <>
-            <h4>Open Tasks</h4>
-            <hr/>
+              <h4>Open Tasks</h4>
+              <hr />
 
               {loading ? (
                 <div className="d-flex justify-content-center mt-5">
-                  <div className="spinner-border" role="status" />
+                  <div className="spinner-border text-light" role="status" />
                 </div>
-              ) : (
-                tasks.length > 0 ? (
-                  tasks.map(task => (
-                    <div key={task.id} className="card mb-3">
-                      <div className="card-body">
-                        <h5 className="card-title">{task.title}</h5>
-                        <p className="card-text">{task.description}</p>
-                        <p className="card-text">
-                          <small className="text-muted">Price: ₹{task.price} | Duration: {task.duration_minutes} mins</small>
-                        </p>
-                        <button className="btn btn-primary" onClick={() => handleClaim(task.id)}>Claim Task</button>
-                      </div>
+              ) : tasks.length > 0 ? (
+                tasks.map((task) => (
+                  <div
+                    key={task.id}
+                    className="card mb-3"
+                    style={{ backgroundColor: '#101528', border: '1px solid #1d2a3b' }}
+                  >
+                    <div className="card-body">
+                      <h5 className="card-title">{task.title}</h5>
+                      <p className="card-text">{task.description}</p>
+                      <p className="card-text text-muted">
+                        Price: ₹{task.price} | Duration: {task.duration_minutes} mins
+                      </p>
+                      <button className="btn btn-primary" onClick={() => handleClaim(task.id)}>
+                        Claim Task
+                      </button>
                     </div>
-                  ))
-                ) : <p>No open tasks available.</p>
+                  </div>
+                ))
+              ) : (
+                <p>No open tasks available.</p>
               )}
             </>
           ) : (
@@ -173,29 +165,17 @@ export default function Dashboard() {
               </div>
               <hr />
 
-              {/* Recently Posted Tasks */}
-              {/* <h5>Recently Posted Tasks</h5>
-              {stats.open > 0 ? (
-                <p>
-                  Recently Posted Tasks Found: <strong>{stats.open}</strong>
-                </p>
-              ) : (
-                <p className="text-muted">No recent tasks.</p>
-              )} */}
-
               {/* Task Status Chart */}
               <div className="mt-4">
                 <h5>Task Status Overview</h5>
-                
+
                 {chartData.datasets && chartData.datasets.length > 0 ? (
                   <Bar
                     data={chartData}
                     options={{
                       responsive: true,
                       plugins: {
-                        legend: {
-                          display: false,
-                        },
+                        legend: { display: false },
                         tooltip: {
                           backgroundColor: '#333',
                           titleColor: '#fff',
@@ -204,37 +184,32 @@ export default function Dashboard() {
                         },
                       },
                       scales: {
-                        x: {
-                          grid: { display: false },
-                          ticks: { font: { size: 14, weight: 'bold' } },
-                        },
+                        x: { grid: { display: false }, ticks: { color: '#f8fafc' } },
                         y: {
                           beginAtZero: true,
-                          grid: {
-                            color: '#e0e0e0',
-                            borderDash: [5, 5],
-                          },
-                          ticks: {
-                            stepSize: 1,
-                            font: { size: 14 },
-                          },
+                          grid: { color: '#334155', borderDash: [5, 5] },
+                          ticks: { color: '#f8fafc' },
                         },
                       },
                     }}
                   />
-
-                ) : <p>Loading chart...</p>}
+                ) : (
+                  <p>Loading chart...</p>
+                )}
               </div>
             </>
           )}
         </div>
 
         {/* Stats Panel */}
-        <div className="col-4 bg-light p-3">
+        <div className="col-4 p-3 overflow-auto" style={{ maxHeight: '100vh' }}>
           <h5>Stats</h5>
           {user?.role === 'worker' ? (
             <>
-              <div className="card mb-2">
+              <div
+                className="card mb-2"
+                style={{ backgroundColor: '#101528', border: '1px solid #1d2a3b' }}
+              >
                 <div className="card-body d-flex align-items-center">
                   <User className="me-2" />
                   <div>
@@ -244,7 +219,10 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <div className="card mb-2">
+              <div
+                className="card mb-2"
+                style={{ backgroundColor: '#101528', border: '1px solid #1d2a3b' }}
+              >
                 <div className="card-body d-flex align-items-center">
                   <CheckCircle className="me-2" />
                   <div>
@@ -254,7 +232,10 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <div className="card mb-2">
+              <div
+                className="card mb-2"
+                style={{ backgroundColor: '#101528', border: '1px solid #1d2a3b' }}
+              >
                 <div className="card-body d-flex align-items-center">
                   <Shield className="me-2" />
                   <div>
@@ -267,7 +248,10 @@ export default function Dashboard() {
           ) : (
             <>
               {/* Business Stats */}
-              <div className="card mb-2">
+              <div
+                className="card mb-2"
+                style={{ backgroundColor: '#101528', border: '1px solid #1d2a3b' }}
+              >
                 <div className="card-body d-flex align-items-center">
                   <User className="me-2" />
                   <div>
@@ -277,7 +261,10 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <div className="card mb-2">
+              <div
+                className="card mb-2"
+                style={{ backgroundColor: '#101528', border: '1px solid #1d2a3b' }}
+              >
                 <div className="card-body d-flex align-items-center">
                   <CheckCircle className="me-2" />
                   <div>
@@ -287,7 +274,10 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <div className="card mb-2">
+              <div
+                className="card mb-2"
+                style={{ backgroundColor: '#101528', border: '1px solid #1d2a3b' }}
+              >
                 <div className="card-body d-flex align-items-center">
                   <Shield className="me-2" />
                   <div>
@@ -298,12 +288,17 @@ export default function Dashboard() {
               </div>
 
               {stats.top_worker && (
-                <div className="card mb-2">
+                <div
+                  className="card mb-2"
+                  style={{ backgroundColor: '#101528', border: '1px solid #1d2a3b' }}
+                >
                   <div className="card-body d-flex align-items-center">
                     <User className="me-2" />
                     <div>
                       <p className="mb-0">Top Worker</p>
-                      <h6>{stats.top_worker.name} ({stats.top_worker.completed_tasks} tasks)</h6>
+                      <h6>
+                        {stats.top_worker.name} ({stats.top_worker.completed_tasks} tasks)
+                      </h6>
                     </div>
                   </div>
                 </div>

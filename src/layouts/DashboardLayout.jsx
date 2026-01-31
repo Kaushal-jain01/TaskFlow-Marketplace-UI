@@ -33,24 +33,24 @@ export default function DashboardLayout() {
 
   const links = user?.role === 'worker' ? workerLinks : businessLinks;
 
-  // Add all route labels here, including dynamic ones
   const routeTitles = [
     ...links,
     { path: '/tasks/create', label: 'Create Task' },
     { path: '/tasks/detail/:id', label: 'Task Details' },
   ];
 
-  // Find label based on current location
   const pageTitle =
     routeTitles.find(route =>
       matchPath({ path: route.path, end: true }, location.pathname)
     )?.label || 'Dashboard';
 
   return (
-    <div className="dashboard-layout">
+    <div className="dashboard-layout" style={{ backgroundColor: '#020617', color: '#f8fafc' }}>
       {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="sidebar-logo">TaskFlow</div>
+      <aside className="sidebar" style={{ backgroundColor: '#101528', borderRight: '1px solid #1d2a3b' }}>
+        <div className="sidebar-logo" style={{ color: '#f8fafc', fontWeight: 'bold', fontSize: '1.5rem', padding: '1rem 0', textAlign: 'center' }}>
+          TaskFlow
+        </div>
 
         <nav className="sidebar-nav">
           {links.map(({ label, path, icon: Icon }) => (
@@ -61,6 +61,17 @@ export default function DashboardLayout() {
               className={({ isActive }) =>
                 isActive ? 'sidebar-link active' : 'sidebar-link'
               }
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                padding: '0.75rem 1rem',
+                color: '#f8fafc',
+                textDecoration: 'none',
+                borderRadius: '0.375rem',
+                marginBottom: '0.25rem',
+                backgroundColor: 'transparent',
+              }}
             >
               <Icon size={18} />
               <span>{label}</span>
@@ -70,21 +81,51 @@ export default function DashboardLayout() {
       </aside>
 
       {/* Main section */}
-      <div className="main-wrapper">
+      <div className="main-wrapper" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {/* Top Navbar */}
-        <header className="topbar">
-          <h2 className="page-title">{pageTitle}</h2>
+        <header className="topbar" style={{ 
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
+          padding: '1rem 2rem', backgroundColor: '#101528', borderBottom: '1px solid #1d2a3b' 
+        }}>
+          <h2 className="page-title" style={{ margin: 0, fontSize: '1.25rem', fontWeight: 'bold' }}>
+            {pageTitle}
+          </h2>
 
-          <div className="profile-section">
-            <div className="profile">
-              <User size={18} />
-              <div className="profile-info">
-                <span className="name">{user?.username || 'User'}</span>
-                <span className="role">{user?.role}</span>
+          <div className="profile-section" >
+            <div 
+              className="profile" 
+            >
+              <User size={20} color="#f8fafc" />
+              <div className="profile-info" >
+                <span 
+                  className="name" 
+                >
+                  {user?.username || 'User'}
+                </span>
+                <span 
+                  className="role" 
+                >
+                  {user?.role}
+                </span>
               </div>
             </div>
 
-            <button className="logout-btn" onClick={logout}>
+            <button 
+              className="logout-btn" 
+              onClick={logout} 
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.25rem',
+                padding: '0.4rem 0.75rem',
+                backgroundColor: '#dc2626',
+                border: 'none',
+                borderRadius: '0.375rem',
+                color: '#fff',
+                cursor: 'pointer',
+                fontSize: '0.875rem'
+              }}
+            >
               <LogOut size={16} />
               Logout
             </button>
@@ -92,7 +133,7 @@ export default function DashboardLayout() {
         </header>
 
         {/* Page Content */}
-        <main className="dashboard-main">
+        <main className="dashboard-main" style={{ flex: 1, padding: '1.5rem', overflowY: 'auto' }}>
           <Outlet />
         </main>
       </div>

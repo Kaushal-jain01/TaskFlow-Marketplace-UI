@@ -10,7 +10,10 @@ export default function NavbarHome() {
         </span>
 
         <div className="d-flex gap-2">
-          <Link to="/login" className="btn btn-outline-light">
+          <Link to="/" className="btn btn-outline-light">
+            Home
+          </Link>
+          <Link to="/login" className="btn btn-primary">
             Login
           </Link>
           <Link to="/register" className="btn btn-primary">
