@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
 import API_BASE from "../config/api";
 import { useEffect } from "react";
+import NavbarHome from '../components/NavbarHome';
 
 export default function HomePage() {
 
@@ -20,25 +20,11 @@ export default function HomePage() {
   return (
     <>
       {/* Navbar */}
-      <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
-        <div className="container-fluid">
-          <span className="navbar-brand fw-bold text-primary fs-4">
-            TaskFlow
-          </span>
+      <NavbarHome />
 
-          <div className="d-flex gap-2">
-            <Link to="/login" className="btn btn-outline-primary">
-              Login
-            </Link>
-            <Link to="/register" className="btn btn-primary">
-              Register
-            </Link>
-          </div>
-        </div>
-      </nav>
 
       {/* Hero Section */}
-      <section className="bg-primary text-white text-center py-5">
+      <section className="hero text-center py-5">
         <div className="container py-5">
           <h1 className="display-4 fw-bold">
             Get Tasks Done. Get Paid.
@@ -49,25 +35,26 @@ export default function HomePage() {
           </p>
 
           <div className="d-flex justify-content-center gap-3">
-            <Link to="/register" className="btn btn-light btn-lg px-4">
+            <Link to="/register" className="btn btn-primary btn-lg px-4">
               Get Started
             </Link>
             <Link to="/login" className="btn btn-outline-light btn-lg px-4">
               Login
             </Link>
           </div>
+
         </div>
       </section>
 
       {/* Features */}
-      <section className="py-5">
+      <section className="features text-center py-5">
         <div className="container">
           <div className="row text-center g-4">
             <div className="col-md-4">
               <div className="card h-100 shadow-sm border-0">
                 <div className="card-body">
                   <h3 className="card-title">📌 Post Tasks</h3>
-                  <p className="card-text text-muted">
+                  <p className="card-text">
                     Businesses can post tasks in minutes and manage everything
                     from a single dashboard.
                   </p>
@@ -79,7 +66,7 @@ export default function HomePage() {
               <div className="card h-100 shadow-sm border-0">
                 <div className="card-body">
                   <h3 className="card-title">⚡ Claim & Complete</h3>
-                  <p className="card-text text-muted">
+                  <p className="card-text">
                     Workers claim tasks, submit proof of work, and get paid
                     quickly.
                   </p>
@@ -91,7 +78,7 @@ export default function HomePage() {
               <div className="card h-100 shadow-sm border-0">
                 <div className="card-body">
                   <h3 className="card-title">💬 Task Discussions</h3>
-                    <p className="card-text text-muted">
+                    <p className="card-text">
                     Workers and businesses can communicate directly
                     through task-based comments.
                     </p>
@@ -103,7 +90,7 @@ export default function HomePage() {
       </section>
 
       {/* Call to Action */}
-      <section className="bg-light py-5 text-center">
+      <section className="cta light-section py-5 text-center">
         <div className="container">
           <h2 className="fw-bold mb-3">
             Start earning or get work done today

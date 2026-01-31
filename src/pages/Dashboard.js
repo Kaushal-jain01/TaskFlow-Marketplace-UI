@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import API_BASE from '../config/api';
 import { PlusCircle, CheckCircle, Shield, User } from 'lucide-react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,

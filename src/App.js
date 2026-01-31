@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
@@ -13,6 +13,8 @@ import CompletedTasks from './pages/CompletedTasks';
 import TaskDetail from './pages/TaskDetails';
 import HomePage from './pages/HomePage';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css'; // Make sure the path is correct
+
 
 // Spinner while loading auth state
 function LoadingSpinner() {
@@ -114,6 +116,10 @@ function AppContent() {
 }
 
 function App() {
+  useEffect(() => {
+    document.documentElement.setAttribute('data-bs-theme', 'dark');
+  }, []);
+
   return (
     <AuthProvider>
       <AppContent />

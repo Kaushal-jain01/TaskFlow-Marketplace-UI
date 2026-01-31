@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import NavbarHome from '../components/NavbarHome';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -20,13 +21,14 @@ export default function Login() {
     }
   };
 
-
   return (
-    <div className="vh-100 d-flex align-items-center justify-content-center bg-light">
-      <div className="card shadow-lg border-0" style={{ maxWidth: '400px', width: '100%' }}>
+    <>
+    <NavbarHome />
+    <div className="vh-100 d-flex align-items-center justify-content-center" style={{ backgroundColor: '#020617' }}>
+      <div className="card shadow-lg" style={{ maxWidth: '400px', width: '100%', backgroundColor: '#101528', border: '2px solid #1d2a3b' }}>
         <div className="card-body p-5">
           <div className="text-center mb-4">
-            <h1 className="h3 fw-bold text-dark mb-2">Welcome Back</h1>
+            <h1 className="h3 fw-bold text-white mb-2">Welcome Back</h1>
             <p className="text-muted">Sign in to continue</p>
           </div>
 
@@ -38,24 +40,26 @@ export default function Login() {
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="form-label fw-semibold">Username</label>
+              <label className="form-label fw-semibold text-white">Username</label>
               <input
                 type="text"
                 className="form-control form-control-lg"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
+                style={{ backgroundColor: '#1e293b', color: '#f8fafc', border: '1px solid #334155' }}
               />
             </div>
 
             <div className="mb-4">
-              <label className="form-label fw-semibold">Password</label>
+              <label className="form-label fw-semibold text-white">Password</label>
               <input
                 type="password"
                 className="form-control form-control-lg"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                style={{ backgroundColor: '#1e293b', color: '#f8fafc', border: '1px solid #334155' }}
               />
             </div>
 
@@ -75,5 +79,6 @@ export default function Login() {
         </div>
       </div>
     </div>
+    </>
   );
 }
