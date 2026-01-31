@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import '../styles/DashboardLayout.css';
 import { useAuth } from '../context/AuthContext';
+import Logo from '../components/Logo';
 
 export default function DashboardLayout() {
   const { user, logout } = useAuth();
@@ -48,9 +49,10 @@ export default function DashboardLayout() {
     <div className="dashboard-layout" style={{ backgroundColor: '#020617', color: '#f8fafc' }}>
       {/* Sidebar */}
       <aside className="sidebar" style={{ backgroundColor: '#101528', borderRight: '1px solid #1d2a3b' }}>
-        <div className="sidebar-logo" style={{ color: '#f8fafc', fontWeight: 'bold', fontSize: '1.5rem', padding: '1rem 0', textAlign: 'center' }}>
-          TaskFlow
-        </div>
+        {/* <div className="sidebar-logo" style={{ color: '#f8fafc', fontWeight: 'bold', fontSize: '1.2rem', padding: '0.5rem 0', textAlign: 'center' }}>
+          TaskFlow Marketplace
+        </div> */}
+        <Logo />
 
         <nav className="sidebar-nav">
           {links.map(({ label, path, icon: Icon }) => (
@@ -88,7 +90,7 @@ export default function DashboardLayout() {
           padding: '1rem 2rem', backgroundColor: '#101528', borderBottom: '1px solid #1d2a3b' 
         }}>
           <h2 className="page-title" style={{ margin: 0, fontSize: '1.25rem', fontWeight: 'bold' }}>
-            {pageTitle}
+            TaskFlow Marketplace
           </h2>
 
           <div className="profile-section" >

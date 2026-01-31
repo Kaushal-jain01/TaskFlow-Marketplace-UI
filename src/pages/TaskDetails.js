@@ -177,9 +177,9 @@ export default function TaskDetail() {
     <div className="container-fluid p-3">
 
       {/* Back */}
-      <button className="btn btn-link mb-2" onClick={() => navigate(-1)}>
+      {/* <button className="btn btn-link mb-2" onClick={() => navigate(-1)}>
         ← Back
-      </button>
+      </button> */}
 
       {/* Header */}
       <div className="mb-3 d-flex justify-content-between align-items-center">
@@ -237,7 +237,7 @@ export default function TaskDetail() {
       )}
 
       {/* Worker Completion Form */}
-      {task.status === 'claimed' && !task.completion && (
+      {task.status === 'claimed' && task.claimed_by?.id === user.id && !task.completion && (
         <div className="card mb-3">
           <div className="card-body">
             <h6 className="fw-bold">Complete Task</h6>
