@@ -225,13 +225,14 @@ export default function TaskDetail() {
           <div className="card-body">
             <h6 className="fw-bold">Completion Details</h6>
             <p>{task.completion.completion_details}</p>
-            {task.completion.proof_image && (
-              <img
-                src={`${API_BASE.replace(/\/api\/$/, '')}${task.completion.proof_image}`}
-                alt="Proof"
-                className="img-fluid rounded border"
-              />
-            )}
+           {task.completion?.proof_image && (
+          <img
+            src={`https://iyhsjnljmjjdnkpmyhjh.supabase.co/storage/v1/object/public/taskflow-marketplace-completion-proofs/${task.completion.proof_image}`}
+            alt="Proof"
+            className="img-fluid rounded border"
+          />
+        )}
+
           </div>
         </div>
       )}
