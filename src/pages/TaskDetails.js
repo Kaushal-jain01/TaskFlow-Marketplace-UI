@@ -226,13 +226,14 @@ export default function TaskDetail() {
             <h6 className="fw-bold">Completion Details</h6>
             <p>{task.completion.completion_details}</p>
            {task.completion?.proof_image && (
-            <img
-              src={task.completion.proof_image}  // Already a full URL 
-              alt="Proof"
-              className="img-fluid rounded border"
-            />
+            <button 
+              className="btn btn-outline-primary d-flex align-items-center gap-2 mt-2"
+              onClick={() => window.open(task.completion.proof_image, '_blank', 'noopener,noreferrer')}
+            >
+              <i className="bi bi-image"></i>
+              View Proof Image
+            </button>
           )}
-
           </div>
         </div>
       )}
