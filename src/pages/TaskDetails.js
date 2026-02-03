@@ -226,12 +226,12 @@ export default function TaskDetail() {
             <h6 className="fw-bold">Completion Details</h6>
             <p>{task.completion.completion_details}</p>
            {task.completion?.proof_image && (
-          <img
-            src={`https://iyhsjnljmjjdnkpmyhjh.supabase.co/storage/v1/object/public/taskflow-marketplace-completion-proofs/${task.completion.proof_image}`}
-            alt="Proof"
-            className="img-fluid rounded border"
-          />
-        )}
+            <img
+              src={task.completion.proof_image}  // Already a full URL 
+              alt="Proof"
+              className="img-fluid rounded border"
+            />
+          )}
 
           </div>
         </div>
