@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import API_BASE from '../config/api';
 
 export default function CompletedTasks() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -170,7 +172,7 @@ export default function CompletedTasks() {
               )}
 
               {/* COMMENTS */}
-              <div className="mt-3">
+              {/* <div className="mt-3">
                 <button
                   className="btn btn-link p-0"
                   onClick={() => fetchComments(task.id)}
@@ -208,6 +210,16 @@ export default function CompletedTasks() {
                     </div>
                   </div>
                 )}
+              </div> */}
+
+              {/* DETAILS */}
+              <div className="mt-3">
+                <button
+                className="btn btn-primary btn-sm mt-2"
+                onClick={() => navigate(`../tasks/${task.id}`)}
+              >
+                View Details
+              </button>
               </div>
 
             </div>

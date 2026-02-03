@@ -171,7 +171,7 @@ export default function ClaimedTasks() {
                 </div>
               )}
 
-              {/* COMMENTS */}
+              {/* DETAILS */}
               <div className="mt-3">
                 <button
                 className="btn btn-primary btn-sm mt-2"
