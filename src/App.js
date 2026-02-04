@@ -12,6 +12,7 @@ import CreateTask from './pages/CreateTask';
 import CompletedTasks from './pages/CompletedTasks';
 import TaskDetail from './pages/TaskDetails';
 import HomePage from './pages/HomePage';
+import Profile from './pages/ProfilePage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'; // Make sure the path is correct
 
@@ -54,6 +55,8 @@ function AppContent() {
             </PublicRoute>
           } 
         />
+        <Route path="/profile" element={<Profile />} />
+
         <Route 
           path="/login" 
           element={
