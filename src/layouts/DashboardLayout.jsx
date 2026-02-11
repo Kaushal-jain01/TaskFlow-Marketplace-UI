@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useLocation, matchPath } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, matchPath, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   ClipboardList,
@@ -16,6 +16,7 @@ import Logo from '../components/Logo';
 export default function DashboardLayout() {
   const { user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const workerLinks = [
     { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
@@ -96,6 +97,7 @@ export default function DashboardLayout() {
           <div className="profile-section" >
             <div 
               className="profile" 
+              onClick={() => navigate('/dashboard/profile')}
             >
               <User size={20} color="#f8fafc" />
               <div className="profile-info" >

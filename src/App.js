@@ -55,7 +55,7 @@ function AppContent() {
             </PublicRoute>
           } 
         />
-        <Route path="/profile" element={<Profile />} />
+        {/* <Route path="/profile" element={<Profile />} /> */}
 
         <Route 
           path="/login" 
@@ -89,6 +89,7 @@ function AppContent() {
           <Route path="claimed" element={<ClaimedTasks />} />
           <Route path="completed" element={<CompletedTasks />} />
           <Route path="history" element={<TaskHistory />} />
+          <Route path="profile" element={<Profile />} /> 
           <Route path="tasks/:id" element={<TaskDetail />} />
         </Route>
 
