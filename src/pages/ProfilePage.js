@@ -7,35 +7,41 @@ export default function Profile() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+ 
 
   useEffect(() => {
-    const fetchProfile = async () => {
-        try {
-        const res = await axios.get(`${API_BASE}/auth/profile/`, {
-            headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-        });
+  const token = localStorage.getItem("token");
+  if (!token) {
+    setLoading(false);
+    return;
+  }
 
-        setProfile(res.data);
-        } catch (err) {
-        if (err.response?.status === 401) {
-            setError("Unauthorized. Please login again.");
-        } else {
-            setError("Failed to load profile.");
-        }
-        } finally {
-        setLoading(false);
-        }
-    };
+  const fetchProfile = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/auth/profile/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setProfile(res.data);
+    } catch (err) {
+      if (err.response?.status === 401) {
+        setError("Session expired. Please login again.");
+      } else {
+        setError("Failed to load profile.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchProfile();
-    }, []);
+  fetchProfile();
+}, []);
 
 
   return (
     <>
-      <NavbarHome />
+      {/* <NavbarHome /> */}
 
       <div
         className="min-vh-100 d-flex justify-content-center py-5"
