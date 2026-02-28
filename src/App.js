@@ -12,6 +12,7 @@ import CreateTask from './pages/CreateTask';
 import CompletedTasks from './pages/CompletedTasks';
 import TaskDetail from './pages/TaskDetails';
 import HomePage from './pages/HomePage';
+import NotificationsPage from './pages/NotificationsPage';
 import Profile from './pages/ProfilePage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'; // Make sure the path is correct
@@ -91,6 +92,7 @@ function AppContent() {
           <Route path="history" element={<TaskHistory />} />
           <Route path="profile" element={<Profile />} /> 
           <Route path="tasks/:id" element={<TaskDetail />} />
+          <Route path="notifications" element={<NotificationsPage />} />
         </Route>
 
         <Route

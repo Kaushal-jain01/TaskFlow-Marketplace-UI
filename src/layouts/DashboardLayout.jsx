@@ -7,16 +7,35 @@ import {
   Hand,
   Clock,
   LogOut,
-  User
+  User,
+  Bell
 } from 'lucide-react';
 import '../styles/DashboardLayout.css';
 import { useAuth } from '../context/AuthContext';
 import Logo from '../components/Logo';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import API_BASE from '../config/api';
 
 export default function DashboardLayout() {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    fetchUnreadCount();
+  }, []);
+
+  const fetchUnreadCount = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/notifications/unread-count/`);
+      console.log("Unread notifications count:", res.data);
+      setUnreadCount(res.data.unread_count);
+    } catch (error) {
+      console.error('Error fetching unread count', error);
+    }
+  };
 
   const workerLinks = [
     { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
@@ -50,9 +69,6 @@ export default function DashboardLayout() {
     <div className="dashboard-layout" style={{ backgroundColor: '#020617', color: '#f8fafc' }}>
       {/* Sidebar */}
       <aside className="sidebar" style={{ backgroundColor: '#101528', borderRight: '1px solid #1d2a3b' }}>
-        {/* <div className="sidebar-logo" style={{ color: '#f8fafc', fontWeight: 'bold', fontSize: '1.2rem', padding: '0.5rem 0', textAlign: 'center' }}>
-          TaskFlow Marketplace
-        </div> */}
         <Logo />
 
         <nav className="sidebar-nav">
@@ -94,7 +110,36 @@ export default function DashboardLayout() {
             TaskFlow Marketplace
           </h2>
 
-          <div className="profile-section" >
+          <div className="profile-section" 
+          style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}
+          >
+            {/* 🔔 Notification Bell */}
+            <div 
+              style={{ position: 'relative', cursor: 'pointer' }}
+              onClick={() => navigate('/dashboard/notifications')}
+            >
+              <Bell size={20} color="#f8fafc" />
+
+              {/* Notification Badge (hardcoded for now) */}
+              {unreadCount > 0 && (
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: '-6px',
+                    right: '-6px',
+                    backgroundColor: '#ef4444',
+                    color: 'white',
+                    borderRadius: '50%',
+                    fontSize: '10px',
+                    padding: '2px 6px',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  {unreadCount}
+                </span>
+              )}
+            </div>
+
             <div 
               className="profile" 
               onClick={() => navigate('/dashboard/profile')}
