@@ -37,7 +37,9 @@ export default function StripePayment({ clientSecret, onSuccess, billing_details
 
   return (
     <form onSubmit={handleSubmit}>
-      <CardElement className="form-control mb-3" />
+      <CardElement className="form-control mb-3" /> 
+      {/* CardElement is a pre-built secure credit card input field provided by Stripe. */}
+      
       <button className="btn btn-success w-100">
         Pay Now
       </button>
